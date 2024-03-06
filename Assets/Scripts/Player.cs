@@ -79,8 +79,8 @@ public class Player : MonoBehaviour
             }
         }
         else
-        {   // Different from Codemonkey's code. So the event is not fired every frame.
-            if(selectedCounter != null) { SetSelectedCounter(null);}
+        {   // TODO maybe better check in SetSelectedCounter() from Codemonkey's code. So the event is not fired every frame.
+            if (selectedCounter != null) { SetSelectedCounter(null);}
         }
     }
 
