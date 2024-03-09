@@ -4,29 +4,53 @@ using UnityEngine;
 
 public class ClearCounter : BaseCounter
 {
-    [SerializeField] private KitchenObjectSO kitchenObjectSO; 
+    [SerializeField] private KitchenObjectSO kitchenObjectSO;
 
     public override void Interact(Player player)
     {
         if (!HasKitchenObject())
-        {// Counter Empty
+        {
+            // Counter Empty
             if (player.HasKitchenObject())
-            {// Player has stuff hand it over
+            {
+                // Player is carrying something
                 player.GetKitchenObject().SetKitchenObjectParent(this);
             }
             else
-            {// Player and counter doesn't have stuff do nothing
-
+            {
+                // Player not carrying anything
             }
         }
         else
-        {// Stuff already there
-            if(player.HasKitchenObject())
-            {// player has stuff then do nothing
-
+        {
+            // There is a KitchenObject here
+            if (player.HasKitchenObject())
+            {
+                // Player is carrying something
+                if (player.GetKitchenObject().TryGetPlate(out PlateKitchenObject plateKitchenObject))
+                {
+                    // Player is holding a Plate
+                    if (plateKitchenObject.TryAddIngredient(GetKitchenObject().GetKitchenObjectSO()))
+                    {
+                        GetKitchenObject().DestroySelf();
+                    }
+                }
+                else
+                {
+                    // Player is not carrying Plate but something else
+                    if (GetKitchenObject().TryGetPlate(out plateKitchenObject))
+                    {
+                        // Counter is holding a Plate
+                        if (plateKitchenObject.TryAddIngredient(player.GetKitchenObject().GetKitchenObjectSO()))
+                        {
+                            player.GetKitchenObject().DestroySelf();
+                        }
+                    }
+                }
             }
             else
-            {// player doesn't have stuff.
+            {
+                // Player is not carrying anything
                 GetKitchenObject().SetKitchenObjectParent(player);
             }
         }
